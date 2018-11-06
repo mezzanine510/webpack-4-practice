@@ -1,22 +1,33 @@
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
+    output: {
+        publicPath: 'dist/'
+    },
     module: {
         rules: [
             {
                 test: /\.css$/,
-                use: ExtractTextPlugin.extract({
-                    use: 'css-loader'
-                })
-                // applied last to first: css-loader first, then style-loader
-                //     [
-                //     { loader: "style-loader" }, 
-                //     { loader: "css-loader" }
-                // ]
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    'css-loader'
+                ]
+            },
+            {
+                test: /\.(jpe?g|png|gif|svg)$/,
+                use: [
+                    {
+                        loader: 'url-loader',
+                        options: { limit: 40000 }
+                    },
+                    'image-webpack-loader'
+                ]
             }
         ]
     },
     plugins: [
-        new ExtractTextPlugin('style.css')
+        new MiniCssExtractPlugin({
+            filename: 'style.css'
+        })
     ]
 };
